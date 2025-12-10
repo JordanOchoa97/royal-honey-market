@@ -8,6 +8,7 @@ import { useProductBySlug, useRelatedProducts } from '@/src/presentation/hooks';
 import { Button } from '@/src/presentation/components/ui/Button';
 import { Card, CardContent, CardTitle } from '@/src/presentation/components/ui/Card';
 import { ProductCard } from '@/src/presentation/components/products/ProductCard';
+import { useCartStore } from '@/src/presentation/store/cartStore';
 
 interface ProductDetailContentProps {
   slug: string;
@@ -367,6 +368,16 @@ export default function ProductDetailContent({ slug }: ProductDetailContentProps
     enabled: !!product,
   });
 
+  const { addItem, openCart, hasItem } = useCartStore();
+  const isInCart = hasItem(product?.id.value || '');
+
+  const handleAddToCart = () => {
+    if (product) {
+      addItem(product, 1);
+      openCart(); // Abrir el drawer
+    }
+  };
+
   if (isLoading) {
     return (
       <Container>
@@ -472,13 +483,18 @@ export default function ProductDetailContent({ slug }: ProductDetailContentProps
           <Description>{product.description}</Description>
 
           <ActionButtons>
-            <Button size="lg" fullWidth>
-              🛒 Add to Cart
+            <Button 
+                size="lg" 
+                fullWidth 
+                onClick={handleAddToCart}
+                disabled={!product}
+            >
+                {isInCart ? '✓ Added to Cart' : '🛒 Add to Cart'}
             </Button>
             <Button size="lg" variant="outline">
-              ❤️ Wishlist
+                ❤️ Wishlist
             </Button>
-          </ActionButtons>
+        </ActionButtons>
 
           <Features>
             <SectionTitle>Key Features</SectionTitle>
