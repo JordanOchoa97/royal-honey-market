@@ -1,12 +1,15 @@
+// src/presentation/components/products/ProductGrid.tsx
 'use client';
 
 import styled from 'styled-components';
 import { Product } from '@/src/core/domain/entities/Product';
 import { ProductCard } from './ProductCard';
+import { ProductCardSkeleton } from '../ui/Skeleton';
 import { memo } from 'react';
 
 interface ProductGridProps {
   products: readonly Product[];
+  isLoading?: boolean;
 }
 
 const Grid = styled.div`
@@ -42,7 +45,17 @@ const EmptyState = styled.div`
   }
 `;
 
-export const ProductGrid = memo(({ products }: ProductGridProps) => {
+export const ProductGrid = memo(({ products, isLoading = false }: ProductGridProps) => {
+  if (isLoading) {
+    return (
+      <Grid>
+        {Array.from({ length: 9 }).map((_, index) => (
+          <ProductCardSkeleton key={`skeleton-${index}`} />
+        ))}
+      </Grid>
+    );
+  }
+
   if (products.length === 0) {
     return (
       <EmptyState>

@@ -1,3 +1,4 @@
+// src/presentation/components/layout/MobileMenu.tsx
 'use client';
 
 import styled from 'styled-components';
@@ -24,15 +25,16 @@ const MenuPanel = styled.div<{ $isOpen: boolean }>`
   top: 0;
   right: 0;
   bottom: 0;
-  width: 280px;
-  max-width: 85vw;
+  width: 300px;
+  max-width: 80vw;
   background: white;
   z-index: 999;
-  padding: 2rem 1.5rem;
+  padding: 1.5rem;
   transform: translateX(${({ $isOpen }) => ($isOpen ? '0' : '100%')});
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
   overflow-y: auto;
+  overflow-x: hidden;
 
   @media (min-width: 769px) {
     display: none;
@@ -41,10 +43,10 @@ const MenuPanel = styled.div<{ $isOpen: boolean }>`
 
 const CloseButton = styled.button`
   position: absolute;
-  top: 1.5rem;
-  right: 1.5rem;
-  width: 32px;
-  height: 32px;
+  top: 1rem;
+  right: 1rem;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -54,6 +56,7 @@ const CloseButton = styled.button`
   cursor: pointer;
   font-size: 1.25rem;
   transition: all 0.2s ease;
+  z-index: 1000;
 
   &:hover {
     background: #e5e7eb;
@@ -61,14 +64,15 @@ const CloseButton = styled.button`
   }
 
   &:active {
-    transform: scale(0.95);
+    transform: scale(0.95) rotate(90deg);
   }
 `;
 
 const MenuTitle = styled.h2`
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 700;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
+  margin-top: 0.5rem;
   color: #1f2937;
 `;
 
@@ -79,17 +83,18 @@ const MenuNav = styled.nav`
 `;
 
 const MenuLink = styled(Link)<{ $isActive: boolean }>`
-  padding: 1rem;
+  padding: 0.875rem 1rem;
   color: ${({ $isActive }) => ($isActive ? '#667eea' : '#1f2937')};
   text-decoration: none;
   font-weight: ${({ $isActive }) => ($isActive ? '600' : '500')};
-  font-size: 1rem;
+  font-size: 0.9375rem;
   border-radius: 8px;
   background: ${({ $isActive }) => ($isActive ? 'rgba(102, 126, 234, 0.1)' : 'transparent')};
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  white-space: nowrap;
 
   &:hover {
     background: rgba(102, 126, 234, 0.1);

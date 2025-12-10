@@ -1,3 +1,4 @@
+// app/products/ProductsPageContent.tsx
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
@@ -71,15 +72,6 @@ const Subtitle = styled.p`
   @media (max-width: 480px) {
     font-size: 1rem;
   }
-`;
-
-const LoadingContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 400px;
-  font-size: 1.25rem;
-  color: #6b7280;
 `;
 
 const ErrorContainer = styled.div`
@@ -190,21 +182,15 @@ export default function ProductsPageContent() {
         isLoading={isLoading}
       />
 
-      {isLoading ? (
-        <LoadingContainer>
-          🍯 Loading delicious honey products...
-        </LoadingContainer>
-      ) : (
-        <>
-          <ProductGrid products={products} />
-          
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
-            isLoading={isLoading}
-          />
-        </>
+      <ProductGrid products={products} isLoading={isLoading} />
+      
+      {!isLoading && products.length > 0 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+          isLoading={isLoading}
+        />
       )}
     </Container>
   );

@@ -29,11 +29,12 @@ const HeaderContainer = styled.div`
   padding: 1rem 2rem;
   display: flex;
   align-items: center;
-  gap: 2rem;
+  justify-content: space-between;
+  gap: 1rem;
 
-  @media (max-width: 640px) {
-    padding: 1rem 1rem;
-    gap: 1rem;
+  @media (max-width: 768px) {
+    padding: 0.75rem 1rem;
+    gap: 0.5rem;
   }
 `;
 
@@ -44,7 +45,11 @@ const HeaderLeft = styled.div`
   flex-shrink: 0;
 
   @media (max-width: 968px) {
-    gap: 1.5rem;
+    gap: 1rem;
+  }
+
+  @media (max-width: 768px) {
+    gap: 0.5rem;
   }
 `;
 
@@ -53,7 +58,7 @@ const HeaderCenter = styled.div`
   display: flex;
   justify-content: center;
   max-width: 600px;
-  margin: 0 auto;
+  margin: 0 1rem;
 
   @media (max-width: 768px) {
     display: none;
@@ -63,7 +68,7 @@ const HeaderCenter = styled.div`
 const HeaderRight = styled.div`
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.5rem;
   flex-shrink: 0;
 `;
 
@@ -79,6 +84,7 @@ const MenuButton = styled.button`
   cursor: pointer;
   font-size: 1.25rem;
   transition: all 0.2s ease;
+  flex-shrink: 0;
 
   &:hover {
     border-color: #667eea;
