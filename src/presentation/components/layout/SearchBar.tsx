@@ -296,7 +296,7 @@ export const SearchBar = memo(function SearchBar() {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
 
   const {
     query,
@@ -313,20 +313,13 @@ export const SearchBar = memo(function SearchBar() {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
-        setIsDropdownOpen(false);
+        setIsFocused(false);
       }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
-
-  // Abrir dropdown cuando hay query o historial
-  useEffect(() => {
-    if (query || searchHistory.length > 0) {
-      setIsDropdownOpen(true);
-    }
-  }, [query, searchHistory]);
 
   const handleClear = () => {
     setQuery('');
@@ -335,7 +328,7 @@ export const SearchBar = memo(function SearchBar() {
 
   const handleSelectResult = (productSlug: string) => {
     saveToHistory(query);
-    setIsDropdownOpen(false);
+    setIsFocused(false);
     setQuery('');
   };
 
@@ -346,7 +339,7 @@ export const SearchBar = memo(function SearchBar() {
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Escape') {
-      setIsDropdownOpen(false);
+      setIsFocused(false);
       inputRef.current?.blur();
     }
   };
@@ -354,7 +347,9 @@ export const SearchBar = memo(function SearchBar() {
   const showHistory = !query && searchHistory.length > 0;
   const showResults = debouncedQuery && results.length > 0;
   const showEmpty = debouncedQuery && !isSearching && results.length === 0;
-  const showDropdown = isDropdownOpen && (showHistory || showResults || showEmpty || isSearching);
+  
+  // Calcular si el dropdown debe estar abierto basado en el estado
+  const isDropdownOpen = isFocused && (showHistory || showResults || showEmpty || isSearching);
 
   return (
     <SearchWrapper ref={wrapperRef}>
@@ -367,12 +362,12 @@ export const SearchBar = memo(function SearchBar() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={handleKeyDown}
-          onFocus={() => setIsDropdownOpen(true)}
+          onFocus={() => setIsFocused(true)}
         />
         {query && <ClearButton onClick={handleClear}>✕</ClearButton>}
       </SearchInputWrapper>
 
-      <Dropdown $isOpen={showDropdown}>
+      <Dropdown $isOpen={isDropdownOpen}>
         {/* Loading State */}
         {isSearching && (
           <LoadingState>
