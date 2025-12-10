@@ -1,20 +1,9 @@
-// src/presentation/components/cart/CartDrawer.tsx
 'use client';
 
 import styled from 'styled-components';
 import { useCartStore, useCartItems, useCartTotals, useCartUI } from '@/src/presentation/store/cartStore';
 import { Button } from '../ui/Button';
 import { useRouter } from 'next/navigation';
-
-/**
- * 🎯 COMPONENTE: CartDrawer
- * 
- * Drawer lateral que muestra el carrito
- */
-
-// ============================================
-// 🎨 STYLED COMPONENTS
-// ============================================
 
 const Overlay = styled.div<{ $isOpen: boolean }>`
   position: fixed;
@@ -256,10 +245,6 @@ const ActionButtons = styled.div`
   gap: 0.75rem;
   margin-top: 1.5rem;
 `;
-
-// ============================================
-// 🎯 COMPONENTE PRINCIPAL
-// ============================================
 
 export const CartDrawer = () => {
   const router = useRouter();
