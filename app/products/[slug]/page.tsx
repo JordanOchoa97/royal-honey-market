@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense } from 'react';
+import { use, Suspense } from 'react';
 import styled from 'styled-components';
 import ProductDetailContent from './ProductDetailContent';
 
@@ -31,8 +31,10 @@ const Spinner = styled.div`
 export default function ProductDetailPage({ 
   params 
 }: { 
-  params: { slug: string } 
+  params: Promise<{ slug: string }> 
 }) {
+  const { slug } = use(params);
+  
   return (
     <Suspense 
       fallback={
@@ -42,7 +44,7 @@ export default function ProductDetailPage({
         </LoadingFallback>
       }
     >
-      <ProductDetailContent slug={params.slug} />
+      <ProductDetailContent slug={slug} />
     </Suspense>
   );
 }
