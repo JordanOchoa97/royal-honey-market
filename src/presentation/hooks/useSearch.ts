@@ -13,24 +13,24 @@ export interface SearchResult {
 const SEARCH_HISTORY_KEY = 'royal-honey-search-history';
 const MAX_HISTORY_ITEMS = 5;
 
+// Función helper para cargar el historial
+const loadSearchHistory = (): string[] => {
+  if (typeof window === 'undefined') return [];
+  
+  try {
+    const stored = localStorage.getItem(SEARCH_HISTORY_KEY);
+    return stored ? JSON.parse(stored) : [];
+  } catch (error) {
+    console.error('Error loading search history:', error);
+    return [];
+  }
+};
+
 export function useSearch() {
   const [query, setQuery] = useState('');
-  const [searchHistory, setSearchHistory] = useState<string[]>([]);
+  // Usar lazy initializer para evitar setState en useEffect
+  const [searchHistory, setSearchHistory] = useState<string[]>(loadSearchHistory);
   const debouncedQuery = useDebounce(query, 300);
-
-  // Cargar historial desde localStorage
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem(SEARCH_HISTORY_KEY);
-      if (stored) {
-        try {
-          setSearchHistory(JSON.parse(stored));
-        } catch (error) {
-          console.error('Error loading search history:', error);
-        }
-      }
-    }
-  }, []);
 
   // Guardar en historial
   const saveToHistory = (searchQuery: string) => {
