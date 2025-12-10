@@ -14,7 +14,7 @@ interface CardImageProps extends HTMLAttributes<HTMLDivElement> {
   aspectRatio?: '16/9' | '4/3' | '1/1' | 'auto';
 }
 
-const StyledCard = styled.div<CardProps>`
+const StyledCard = styled.div<{ $hoverable?: boolean; $clickable?: boolean }>`
   background: white;
   border-radius: 1rem;
   overflow: hidden;
@@ -24,12 +24,12 @@ const StyledCard = styled.div<CardProps>`
   
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   
-  cursor: ${({ clickable }) => (clickable ? 'pointer' : 'default')};
+  cursor: ${({ $clickable }) => ($clickable ? 'pointer' : 'default')};
   
   will-change: transform, box-shadow;
 
-  ${({ hoverable = true }) =>
-    hoverable &&
+  ${({ $hoverable = true }) =>
+    $hoverable &&
     `
     &:hover {
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12),
@@ -45,7 +45,7 @@ const StyledCard = styled.div<CardProps>`
 
   @media (max-width: 768px) {
     &:hover {
-      transform: translateY(-2px); /* Menos movimiento en móvil */
+      transform: translateY(-2px);
     }
   }
 
@@ -61,8 +61,8 @@ export const Card = memo(
       return (
         <StyledCard 
           ref={ref} 
-          hoverable={hoverable} 
-          clickable={clickable}
+          $hoverable={hoverable} 
+          $clickable={clickable}
           {...props}
         >
           {children}
@@ -74,14 +74,14 @@ export const Card = memo(
 
 Card.displayName = 'Card';
 
-const StyledCardImage = styled.div<CardImageProps>`
+const StyledCardImage = styled.div<{ $aspectRatio?: '16/9' | '4/3' | '1/1' | 'auto' }>`
   position: relative;
   width: 100%;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   overflow: hidden;
 
-  ${({ aspectRatio = '16/9' }) => {
-    if (aspectRatio === 'auto') return '';
+  ${({ $aspectRatio = '16/9' }) => {
+    if ($aspectRatio === 'auto') return '';
     
     const ratios = {
       '16/9': '56.25%',
@@ -90,7 +90,7 @@ const StyledCardImage = styled.div<CardImageProps>`
     };
 
     return `
-      padding-top: ${ratios[aspectRatio]};
+      padding-top: ${ratios[$aspectRatio]};
     `;
   }}
 
@@ -100,14 +100,14 @@ const StyledCardImage = styled.div<CardImageProps>`
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Cubre todo el espacio sin distorsionar */
+    object-fit: cover;
     
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   ${StyledCard}:hover & img,
   ${StyledCard}:hover & video {
-    transform: scale(1.05); /* Zoom sutil del 5% */
+    transform: scale(1.05);
   }
 
   &::after {
@@ -122,7 +122,7 @@ const StyledCardImage = styled.div<CardImageProps>`
       rgba(0, 0, 0, 0.3) 0%,
       transparent 100%
     );
-    pointer-events: none; /* No bloquea clicks */
+    pointer-events: none;
   }
 `;
 
@@ -130,7 +130,7 @@ export const CardImage = memo(
   forwardRef<HTMLDivElement, CardImageProps>(
     ({ children, aspectRatio = '16/9', ...props }, ref) => {
       return (
-        <StyledCardImage ref={ref} aspectRatio={aspectRatio} {...props}>
+        <StyledCardImage ref={ref} $aspectRatio={aspectRatio} {...props}>
           {children}
         </StyledCardImage>
       );
@@ -145,9 +145,9 @@ interface CardContentProps extends HTMLAttributes<HTMLDivElement> {
   padding?: 'sm' | 'md' | 'lg';
 }
 
-const StyledCardContent = styled.div<CardContentProps>`
-  padding: ${({ padding = 'md' }) => {
-    switch (padding) {
+const StyledCardContent = styled.div<{ $padding?: 'sm' | 'md' | 'lg' }>`
+  padding: ${({ $padding = 'md' }) => {
+    switch ($padding) {
       case 'sm':
         return '1rem';
       case 'lg':
@@ -158,8 +158,8 @@ const StyledCardContent = styled.div<CardContentProps>`
   }};
 
   @media (max-width: 768px) {
-    padding: ${({ padding = 'md' }) => {
-      switch (padding) {
+    padding: ${({ $padding = 'md' }) => {
+      switch ($padding) {
         case 'sm':
           return '0.75rem';
         case 'lg':
@@ -175,7 +175,7 @@ export const CardContent = memo(
   forwardRef<HTMLDivElement, CardContentProps>(
     ({ children, padding = 'md', ...props }, ref) => {
       return (
-        <StyledCardContent ref={ref} padding={padding} {...props}>
+        <StyledCardContent ref={ref} $padding={padding} {...props}>
           {children}
         </StyledCardContent>
       );
@@ -188,7 +188,6 @@ CardContent.displayName = 'CardContent';
 export const CardHeader = styled.div`
   margin-bottom: 1rem;
 
-  /* 📱 Responsive spacing */
   @media (max-width: 768px) {
     margin-bottom: 0.75rem;
   }
@@ -210,7 +209,7 @@ export const CardTitle = styled.h3`
   transition: color 0.2s ease;
 
   ${StyledCard}:hover & {
-    color: #667eea; /* Cambia a color primario en hover */
+    color: #667eea;
   }
 
   @media (max-width: 768px) {
@@ -236,7 +235,7 @@ export const CardDescription = styled.p`
 
   @media (max-width: 768px) {
     font-size: 0.8125rem;
-    -webkit-line-clamp: 2; /* Solo 2 líneas en móvil */
+    -webkit-line-clamp: 2;
   }
 `;
 
@@ -265,7 +264,7 @@ export const CardBadgeContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  z-index: 10; /* Por encima de la imagen */
+  z-index: 10;
   gap: 0.5rem;
 
   @media (max-width: 768px) {

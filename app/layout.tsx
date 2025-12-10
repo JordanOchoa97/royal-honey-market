@@ -2,8 +2,11 @@
 import type { Metadata } from "next";
 import { QueryProvider } from "@/src/presentation/providers/QueryProvider";
 import StyledComponentsRegistry from "@/src/presentation/providers/StyledComponentsRegistry";
+import { ToastProvider } from "@/src/presentation/providers/ToastProvider";
 import { CartWrapper } from "@/src/presentation/components/cart/CartWrapper";
 import { Header } from "@/src/presentation/components/layout";
+import { Footer } from "@/src/presentation/components/layout";
+import { ErrorBoundary } from "@/src/presentation/components/ui/ErrorBoundary";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -21,9 +24,13 @@ export default function RootLayout({
       <body>
         <StyledComponentsRegistry>
           <QueryProvider>
-            <Header />
-            {children}
-            <CartWrapper />
+            <ErrorBoundary>
+              <Header />
+              <main>{children}</main>
+              <Footer />
+              <CartWrapper />
+              <ToastProvider />
+            </ErrorBoundary>
           </QueryProvider>
         </StyledComponentsRegistry>
       </body>

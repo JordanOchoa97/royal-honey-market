@@ -14,7 +14,12 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
 }
 
-const StyledButton = styled.button<ButtonProps>`
+const StyledButton = styled.button<{
+  $variant?: ButtonVariant;
+  $size?: ButtonSize;
+  $fullWidth?: boolean;
+  $isLoading?: boolean;
+}>`
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -34,8 +39,8 @@ const StyledButton = styled.button<ButtonProps>`
     cursor: not-allowed;
   }
 
-  ${({ size = 'md' }) => {
-    switch (size) {
+  ${({ $size = 'md' }) => {
+    switch ($size) {
       case 'sm':
         return css`
           padding: 0.5rem 1rem;
@@ -57,8 +62,8 @@ const StyledButton = styled.button<ButtonProps>`
     }
   }}
 
-  ${({ variant = 'primary' }) => {
-    switch (variant) {
+  ${({ $variant = 'primary' }) => {
+    switch ($variant) {
       case 'primary':
         return css`
           background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -118,15 +123,14 @@ const StyledButton = styled.button<ButtonProps>`
     }
   }}
 
-  ${({ fullWidth }) =>
-    fullWidth &&
+  ${({ $fullWidth }) =>
+    $fullWidth &&
     css`
       width: 100%;
     `}
 
-  /* ⏳ LOADING STATE - Spinner animado */
-  ${({ isLoading }) =>
-    isLoading &&
+  ${({ $isLoading }) =>
+    $isLoading &&
     css`
       color: transparent;
       pointer-events: none;
@@ -154,10 +158,10 @@ const StyledButton = styled.button<ButtonProps>`
     `}
 
   @media (max-width: 768px) {
-    min-height: 48px; /* iOS recomienda 44px mínimo para touch */
+    min-height: 48px;
     
-    ${({ size }) =>
-      size === 'sm' &&
+    ${({ $size }) =>
+      $size === 'sm' &&
       css`
         min-height: 40px;
       `}
@@ -166,12 +170,15 @@ const StyledButton = styled.button<ButtonProps>`
 
 export const Button = memo(
   forwardRef<HTMLButtonElement, ButtonProps>(
-    ({ children, isLoading, disabled, ...props }, ref) => {
+    ({ children, isLoading, disabled, variant, size, fullWidth, ...props }, ref) => {
       return (
         <StyledButton 
           ref={ref} 
           disabled={disabled || isLoading} 
-          isLoading={isLoading} 
+          $isLoading={isLoading}
+          $variant={variant}
+          $size={size}
+          $fullWidth={fullWidth}
           {...props}
           aria-busy={isLoading}
           aria-disabled={disabled || isLoading}

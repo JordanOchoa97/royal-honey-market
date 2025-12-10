@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { Product } from '@/src/core/domain/entities/Product';
+import toast from 'react-hot-toast';
 
 export interface CartItem {
   product: Product;
@@ -50,28 +51,46 @@ export const useCartStore = create<CartStore>()(
               ...newItems[existingItemIndex],
               quantity: newItems[existingItemIndex].quantity + quantity,
             };
+            
+            toast.success(`${product.name} quantity updated!`, {
+              icon: '🛒',
+              duration: 2000,
+            });
+            
             return { items: newItems };
-          } else {
-            return {
-              items: [
-                ...state.items,
-                {
-                  product,
-                  quantity,
-                  addedAt: new Date(),
-                },
-              ],
-            };
           }
+
+          toast.success(`${product.name} added to cart!`, {
+            icon: '🛒',
+            duration: 2000,
+          });
+
+          return {
+            items: [
+              ...state.items,
+              {
+                product,
+                quantity,
+                addedAt: new Date(),
+              },
+            ],
+          };
         });
       },
 
       removeItem: (productId) => {
-        set((state) => ({
-          items: state.items.filter(
-            item => item.product.id.value !== productId
-          ),
-        }));
+        set((state) => {
+          const item = state.items.find(i => i.product.id.value === productId);
+          if (item) {
+            toast.success(`${item.product.name} removed from cart`, {
+              icon: '🗑️',
+              duration: 2000,
+            });
+          }
+          return {
+            items: state.items.filter(item => item.product.id.value !== productId),
+          };
+        });
       },
 
       updateQuantity: (productId, quantity) => {
@@ -133,7 +152,7 @@ export const useCartStore = create<CartStore>()(
       },
     }),
     {
-      name: 'cart-storage',
+      name: 'royal-honey-cart',
       storage: createJSONStorage(() => localStorage),
     }
   )

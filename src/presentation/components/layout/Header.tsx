@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { memo, useState, useEffect } from 'react';
 import { Logo } from './Logo';
 import { Navigation } from './Navigation';
+import { SearchBar } from './SearchBar';
 import { CartButton } from './CartButton';
 import { MobileMenu } from './MobileMenu';
 import { useCartStore } from '@/src/presentation/store/cartStore';
@@ -28,24 +29,42 @@ const HeaderContainer = styled.div`
   padding: 1rem 2rem;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 2rem;
 
   @media (max-width: 640px) {
     padding: 1rem 1rem;
+    gap: 1rem;
   }
 `;
 
 const HeaderLeft = styled.div`
   display: flex;
   align-items: center;
-  gap: 3rem;
+  gap: 2rem;
+  flex-shrink: 0;
+
+  @media (max-width: 968px) {
+    gap: 1.5rem;
+  }
+`;
+
+const HeaderCenter = styled.div`
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  max-width: 600px;
+  margin: 0 auto;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;
 
 const HeaderRight = styled.div`
   display: flex;
   align-items: center;
   gap: 1rem;
+  flex-shrink: 0;
 `;
 
 const MenuButton = styled.button`
@@ -103,6 +122,10 @@ export const Header = memo(function Header() {
             <Logo />
             <Navigation />
           </HeaderLeft>
+
+          <HeaderCenter>
+            <SearchBar />
+          </HeaderCenter>
 
           <HeaderRight>
             <CartButton itemCount={cartItemCount} onClick={toggleCart} />
