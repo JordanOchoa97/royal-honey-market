@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation';
 import styled from 'styled-components';
 import { useProductBySlug, useRelatedProducts } from '@/src/presentation/hooks';
 import { Button } from '@/src/presentation/components/ui/Button';
-import { Card, CardContent, CardTitle } from '@/src/presentation/components/ui/Card';
 import { ProductCard } from '@/src/presentation/components/products/ProductCard';
 import { useCartStore } from '@/src/presentation/store/cartStore';
 
@@ -333,11 +332,6 @@ const RelatedGrid = styled.div`
   }
 `;
 
-const ErrorContainer = styled.div`
-  text-align: center;
-  padding: 4rem 2rem;
-`;
-
 const NotFound = styled.div`
   display: flex;
   flex-direction: column;
@@ -374,7 +368,7 @@ export default function ProductDetailContent({ slug }: ProductDetailContentProps
   const handleAddToCart = () => {
     if (product) {
       addItem(product, 1);
-      openCart(); // Abrir el drawer
+      openCart();
     }
   };
 
@@ -393,7 +387,7 @@ export default function ProductDetailContent({ slug }: ProductDetailContentProps
       <Container>
         <NotFound>
           <h2>🍯 Product Not Found</h2>
-          <p>Sorry, we couldn't find the honey product you're looking for.</p>
+          <p>Sorry, we couldn&apos;t find the honey product you&apos;re looking for.</p>
           <Button onClick={() => router.push('/products')}>
             Back to Products
           </Button>
