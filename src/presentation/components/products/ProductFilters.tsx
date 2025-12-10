@@ -1,4 +1,3 @@
-// src/presentation/components/products/ProductFilters.tsx
 'use client';
 
 import styled from 'styled-components';
@@ -7,37 +6,13 @@ import { ProductCategory } from '@/src/core/domain/entities/Product';
 import { ProductFilter, SortOption } from '@/src/core/domain/value-objects/ProductFilter';
 import { Button } from '../ui/Button';
 
-/**
- * 🎯 COMPONENTE: ProductFilters
- * 
- * CONCEPTOS QUE APRENDEREMOS:
- * 
- * 1. CONTROLLED COMPONENTS
- *    - React controla el valor de cada input
- *    - Single source of truth
- * 
- * 2. CALLBACK OPTIMIZATION
- *    - useCallback para evitar recrear funciones
- *    - Importante cuando pasamos callbacks a componentes memo
- * 
- * 3. DERIVED STATE
- *    - No guardar datos que se pueden calcular
- *    - useMemo para cálculos costosos
- * 
- * 4. LIFTING STATE UP
- *    - El estado vive en el padre (page.tsx)
- *    - Este componente solo lo modifica via callbacks
- */
-
 interface ProductFiltersProps {
-  // Estado actual de filtros
   selectedCategories: ProductCategory[];
   priceRange: { min: number; max: number };
   searchQuery: string;
   minRating: number;
   sortBy: SortOption;
   
-  // Callbacks para actualizar filtros
   onCategoryChange: (categories: ProductCategory[]) => void;
   onPriceRangeChange: (range: { min: number; max: number }) => void;
   onSearchChange: (query: string) => void;
@@ -45,14 +20,9 @@ interface ProductFiltersProps {
   onSortChange: (sort: SortOption) => void;
   onReset: () => void;
   
-  // Metadata
   totalResults?: number;
   isLoading?: boolean;
 }
-
-// ============================================
-// 🎨 STYLED COMPONENTS
-// ============================================
 
 const FiltersContainer = styled.div`
   background: white;
@@ -263,10 +233,6 @@ const ResultsInfo = styled.div`
   }
 `;
 
-// ============================================
-// 📊 DATOS ESTÁTICOS
-// ============================================
-
 const categories: ProductCategory[] = [
   'raw-honey',
   'flavored-honey',
@@ -301,10 +267,6 @@ const ratingOptions = [
   { value: 4.5, label: '4.5+ Stars' },
 ];
 
-// ============================================
-// 🎯 COMPONENTE PRINCIPAL
-// ============================================
-
 export const ProductFilters = memo(({
   selectedCategories,
   priceRange,
@@ -320,29 +282,15 @@ export const ProductFilters = memo(({
   totalResults = 0,
   isLoading = false,
 }: ProductFiltersProps) => {
-  
-  /**
-   * 🎯 HANDLER: Toggle categoría
-   * 
-   * useCallback evita recrear la función en cada render
-   * Solo se recrea si selectedCategories u onCategoryChange cambian
-   */
+
   const handleCategoryToggle = useCallback((category: ProductCategory) => {
     if (selectedCategories.includes(category)) {
-      // Remover categoría
       onCategoryChange(selectedCategories.filter(c => c !== category));
     } else {
-      // Agregar categoría
       onCategoryChange([...selectedCategories, category]);
     }
   }, [selectedCategories, onCategoryChange]);
 
-  /**
-   * 🎯 DERIVED STATE: Contar filtros activos
-   * 
-   * useMemo evita recalcular en cada render
-   * Solo recalcula si las dependencias cambian
-   */
   const activeFiltersCount = useMemo(() => {
     let count = 0;
     if (selectedCategories.length > 0) count++;
@@ -354,7 +302,6 @@ export const ProductFilters = memo(({
 
   return (
     <FiltersContainer>
-      {/* 🔍 BÚSQUEDA */}
       <FilterSection>
         <FilterLabel htmlFor="search">
           Search Products
@@ -369,7 +316,6 @@ export const ProductFilters = memo(({
         />
       </FilterSection>
 
-      {/* 🏷️ CATEGORÍAS */}
       <FilterSection>
         <FilterLabel>Categories</FilterLabel>
         <CategoryGrid>
@@ -386,7 +332,6 @@ export const ProductFilters = memo(({
         </CategoryGrid>
       </FilterSection>
 
-      {/* 💰 RANGO DE PRECIO */}
       <FilterSection>
         <FilterLabel>Price Range</FilterLabel>
         <PriceInputs>
@@ -420,7 +365,6 @@ export const ProductFilters = memo(({
         </PriceInputs>
       </FilterSection>
 
-      {/* ⭐ RATING MÍNIMO */}
       <FilterSection>
         <FilterLabel>Minimum Rating</FilterLabel>
         <RatingStars>
@@ -438,7 +382,6 @@ export const ProductFilters = memo(({
         </RatingStars>
       </FilterSection>
 
-      {/* 🔄 ORDENAMIENTO */}
       <FilterSection>
         <FilterLabel htmlFor="sort">Sort By</FilterLabel>
         <Select
@@ -455,7 +398,6 @@ export const ProductFilters = memo(({
         </Select>
       </FilterSection>
 
-      {/* ℹ️ INFO DE RESULTADOS */}
       {totalResults > 0 && (
         <ResultsInfo>
           <span>
@@ -469,7 +411,6 @@ export const ProductFilters = memo(({
         </ResultsInfo>
       )}
 
-      {/* 🔄 ACCIONES */}
       <FilterActions>
         <Button 
           variant="outline" 

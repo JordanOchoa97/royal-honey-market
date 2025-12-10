@@ -1,12 +1,5 @@
-// src/infrastructure/mock-data/products.mock.ts
-
 import { Product, ProductCategory } from '@/src/core/domain/entities/Product';
 
-/**
- * 🍯 MOCK DATA: 10 Productos de Miel Premium
- * 
- * Datos simulados realistas para desarrollo y testing
- */
 export const MOCK_HONEY_PRODUCTS: Product[] = [
   {
     id: { value: '1' },

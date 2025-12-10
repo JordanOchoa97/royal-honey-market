@@ -1,15 +1,8 @@
-// src/presentation/hooks/useRelatedProducts.ts
-
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import { Product, ProductId } from '@/src/core/domain/entities/Product';
 import { GetRelatedProductsUseCase } from '@/src/core/application/use-cases';
 import { createMockProductRepository } from '@/src/infrastucture/repositories/ProductRepository.mock';
 
-/**
- * 🎯 CUSTOM HOOK: useRelatedProducts
- * 
- * Para mostrar "También te puede interesar"
- */
 const createGetRelatedProductsUseCase = () => {
   const repository = createMockProductRepository();
   return new GetRelatedProductsUseCase(repository);

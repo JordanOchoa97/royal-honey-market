@@ -1,14 +1,11 @@
-// src/presentation/components/ui/Button.tsx
 'use client';
 
 import styled, { css } from 'styled-components';
 import { ButtonHTMLAttributes, forwardRef, memo } from 'react';
 
-// 📝 TIPOS: Definimos las variantes que nuestro botón puede tener
 type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost';
 type ButtonSize = 'sm' | 'md' | 'lg';
 
-// 📝 INTERFACE: Extendemos los atributos nativos de HTML button
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
   size?: ButtonSize;
@@ -17,9 +14,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
 }
 
-// 🎨 STYLED COMPONENT: Botón con todas las variantes
 const StyledButton = styled.button<ButtonProps>`
-  /* Base styles - aplicados a todos los botones */
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -34,13 +29,11 @@ const StyledButton = styled.button<ButtonProps>`
   position: relative;
   overflow: hidden;
 
-  /* Estado disabled */
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  /* 📏 TAMAÑOS - Usando function para diferentes sizes */
   ${({ size = 'md' }) => {
     switch (size) {
       case 'sm':
@@ -64,7 +57,6 @@ const StyledButton = styled.button<ButtonProps>`
     }
   }}
 
-  /* 🎨 VARIANTES - Diferentes estilos visuales */
   ${({ variant = 'primary' }) => {
     switch (variant) {
       case 'primary':
@@ -126,7 +118,6 @@ const StyledButton = styled.button<ButtonProps>`
     }
   }}
 
-  /* 📱 FULL WIDTH - Para móviles */
   ${({ fullWidth }) =>
     fullWidth &&
     css`
@@ -162,7 +153,6 @@ const StyledButton = styled.button<ButtonProps>`
       }
     `}
 
-  /* 📱 RESPONSIVE - Touch targets en móvil */
   @media (max-width: 768px) {
     min-height: 48px; /* iOS recomienda 44px mínimo para touch */
     
@@ -174,7 +164,6 @@ const StyledButton = styled.button<ButtonProps>`
   }
 `;
 
-// ⚛️ COMPONENTE: Usando forwardRef para acceso al DOM
 export const Button = memo(
   forwardRef<HTMLButtonElement, ButtonProps>(
     ({ children, isLoading, disabled, ...props }, ref) => {
@@ -184,7 +173,6 @@ export const Button = memo(
           disabled={disabled || isLoading} 
           isLoading={isLoading} 
           {...props}
-          // Accesibilidad: aria-busy cuando está cargando
           aria-busy={isLoading}
           aria-disabled={disabled || isLoading}
         >

@@ -1,12 +1,13 @@
-// app/products/page.tsx
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import styled from 'styled-components';
 import { useProducts } from '@/src/presentation/hooks';
 import { useDebounce } from '@/src/presentation/hooks/useDebounce';
 import { ProductGrid } from '@/src/presentation/components/products/ProductGrid';
 import { ProductFilters } from '@/src/presentation/components/products/ProductFilters';
+import { Pagination } from '@/src/presentation/components/products/Pagination';
 import { ProductCategory } from '@/src/core/domain/entities/Product';
 import { SortOption } from '@/src/core/domain/value-objects/ProductFilter';
 
@@ -95,21 +96,28 @@ const ErrorContainer = styled.div`
 `;
 
 export default function ProductsPage() {
-  // 🎯 ESTADO LOCAL: Filtros
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const pageFromUrl = Number(searchParams.get('page')) || 1;
+
+  const [currentPage, setCurrentPage] = useState(pageFromUrl);
   const [selectedCategories, setSelectedCategories] = useState<ProductCategory[]>([]);
   const [priceRange, setPriceRange] = useState({ min: 0, max: 1000 });
   const [searchQuery, setSearchQuery] = useState('');
   const [minRating, setMinRating] = useState(0);
   const [sortBy, setSortBy] = useState<SortOption>('newest');
 
-  // 🎯 DEBOUNCED SEARCH: Solo busca después de 500ms sin cambios
   const debouncedSearch = useDebounce(searchQuery, 500);
 
-  // 🎯 QUERY: Usar filtros con React Query
-  const { products, total, isLoading, error } = useProducts({
+  useEffect(() => {
+    setCurrentPage(pageFromUrl);
+  }, [pageFromUrl]);
+
+  const { products, total, totalPages, isLoading, error } = useProducts({
     query: {
-      page: 1,
-      pageSize: 12,
+      page: currentPage,
+      pageSize: 9, // 9 productos por página (3x3 grid)
       sortBy,
       filter: {
         categories: selectedCategories.length > 0 ? selectedCategories : undefined,
@@ -121,24 +129,37 @@ export default function ProductsPage() {
     },
   });
 
-  /**
-   * 🎯 HANDLER: Reset todos los filtros
-   * 
-   * useCallback para evitar recrear la función
-   */
+  const handlePageChange = useCallback((page: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('page', page.toString());
+    router.push(`?${params.toString()}`, { scroll: false });
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+    setCurrentPage(page);
+  }, [router, searchParams]);
+
+
   const handleReset = useCallback(() => {
     setSelectedCategories([]);
     setPriceRange({ min: 0, max: 1000 });
     setSearchQuery('');
     setMinRating(0);
     setSortBy('newest');
-  }, []);
+    handlePageChange(1); // Volver a página 1
+  }, [handlePageChange]);
+
+  useEffect(() => {
+    if (currentPage !== 1) {
+      handlePageChange(1);
+    }
+  }, [selectedCategories, priceRange, debouncedSearch, minRating, sortBy]);
 
   if (error) {
     return (
       <Container>
         <ErrorContainer>
-          <h3>❌ Error loading products</h3>
+          <h3>Error loading products</h3>
           <p>{error.message}</p>
         </ErrorContainer>
       </Container>
@@ -175,7 +196,16 @@ export default function ProductsPage() {
           🍯 Loading delicious honey products...
         </LoadingContainer>
       ) : (
-        <ProductGrid products={products} />
+        <>
+          <ProductGrid products={products} />
+          
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+            isLoading={isLoading}
+          />
+        </>
       )}
     </Container>
   );

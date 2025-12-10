@@ -1,5 +1,3 @@
-// src/presentation/components/products/ProductCard.tsx
-
 'use client';
 
 import Link from 'next/link';
@@ -17,24 +15,6 @@ import {
 } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { memo } from 'react';
-
-/**
- * 🎯 COMPONENT: ProductCard
- * 
- * CONCEPTOS:
- * 
- * 1. PRESENTATIONAL COMPONENT
- *    - Solo se encarga de mostrar datos
- *    - No tiene lógica de negocio
- *    - Recibe todo por props
- * 
- * 2. MEMO OPTIMIZATION
- *    - React.memo previene re-renders innecesarios
- *    - Solo re-renderiza si product cambia
- * 
- * 3. STYLED COMPONENTS
- *    - CSS-in-JS con scoping automático
- */
 
 interface ProductCardProps {
   product: Product;
@@ -152,12 +132,10 @@ const ImagePlaceholder = styled.div<{ $category: string }>`
 export const ProductCard = memo(({ product }: ProductCardProps) => {
   const primaryImage = product.images.find(img => img.isPrimary) || product.images[0];
   
-  // Calcular descuento
   const discount = product.originalPrice
     ? Math.round(((product.originalPrice.amount - product.price.amount) / product.originalPrice.amount) * 100)
     : 0;
 
-  // Formatear precio
   const formatPrice = (amount: number, currency: string) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',

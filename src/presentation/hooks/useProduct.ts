@@ -1,5 +1,3 @@
-// src/presentation/hooks/useProduct.ts
-
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import { Product, ProductId } from '@/src/core/domain/entities/Product';
 import { 
@@ -8,9 +6,6 @@ import {
 } from '@/src/core/application/use-cases';
 import { createMockProductRepository } from '@/src/infrastucture/repositories/ProductRepository.mock';
 
-/**
- * 🎯 CUSTOM HOOK: useProduct (por ID)
- */
 const createGetProductByIdUseCase = () => {
   const repository = createMockProductRepository();
   return new GetProductByIdUseCase(repository);
@@ -34,16 +29,10 @@ export function useProductById({
       return useCase.execute(id);
     },
     enabled: enabled && id !== null,
-    staleTime: 10 * 60 * 1000, // 10 minutos - producto individual cambia menos
+    staleTime: 10 * 60 * 1000,
   });
 }
 
-/**
- * 🎯 CUSTOM HOOK: useProduct (por Slug)
- * 
- * Útil para URLs amigables:
- * /products/raw-organic-wildflower-honey
- */
 const createGetProductBySlugUseCase = () => {
   const repository = createMockProductRepository();
   return new GetProductBySlugUseCase(repository);

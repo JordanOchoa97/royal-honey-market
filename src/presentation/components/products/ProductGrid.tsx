@@ -1,5 +1,3 @@
-// src/presentation/components/products/ProductGrid.tsx
-
 'use client';
 
 import styled from 'styled-components';
