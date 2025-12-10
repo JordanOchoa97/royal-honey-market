@@ -1,7 +1,7 @@
-// app/layout.tsx
 import type { Metadata } from "next";
 import { QueryProvider } from "@/src/presentation/providers/QueryProvider";
 import { CartWrapper } from "@/src/presentation/components/cart/CartWrapper";
+import { Header } from "@/src/presentation/components/layout";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -18,6 +18,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <QueryProvider>
+          <Header />
           {children}
           <CartWrapper />
         </QueryProvider>
