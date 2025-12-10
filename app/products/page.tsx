@@ -1,10 +1,8 @@
+'use client';
 import { Suspense } from 'react';
-import dynamic from 'next/dynamic';
 import styled from 'styled-components';
+import ProductsPageContent from './ProductsPageContent';
 
-const ProductsPageContent = dynamic(() => import('./ProductsPageContent'), {
-  ssr: false,
-});
 const LoadingFallback = styled.div`
   display: flex;
   justify-content: center;
