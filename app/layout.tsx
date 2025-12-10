@@ -1,5 +1,7 @@
+// app/layout.tsx
 import type { Metadata } from "next";
 import { QueryProvider } from "@/src/presentation/providers/QueryProvider";
+import StyledComponentsRegistry from "@/src/presentation/providers/StyledComponentsRegistry";
 import { CartWrapper } from "@/src/presentation/components/cart/CartWrapper";
 import { Header } from "@/src/presentation/components/layout";
 import "./globals.css";
@@ -17,11 +19,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <QueryProvider>
-          <Header />
-          {children}
-          <CartWrapper />
-        </QueryProvider>
+        <StyledComponentsRegistry>
+          <QueryProvider>
+            <Header />
+            {children}
+            <CartWrapper />
+          </QueryProvider>
+        </StyledComponentsRegistry>
       </body>
     </html>
   );
